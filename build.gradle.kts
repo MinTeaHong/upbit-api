@@ -21,6 +21,22 @@ repositories {
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+	implementation("org.java-websocket:Java-WebSocket:1.5.2")
+	implementation("com.google.code.gson:gson:2.8.8")
+	// https://mvnrepository.com/artifact/org.apache.directory.studio/org.apache.commons.codec
+	implementation("org.apache.directory.studio:org.apache.commons.codec:1.8")
+
+	// https://mvnrepository.com/artifact/com.auth0/java-jwt
+	implementation("com.auth0:java-jwt:4.3.0")
+	implementation("com.squareup.okhttp3:okhttp:4.9.2")
+	implementation("org.springframework.boot:spring-boot-starter-logging")
+	compileOnly("org.projectlombok:lombok")
+	annotationProcessor("org.projectlombok:lombok")
+
+
+
+
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")

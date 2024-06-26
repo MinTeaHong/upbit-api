@@ -1,0 +1,6 @@
+spring:
+  application:
+    name : upbit-api
+
+logging:
+  config: classpath:logback-spring.xml

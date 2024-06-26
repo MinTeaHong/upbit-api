@@ -1,4 +1,4 @@
-package com.salgam.upbitapi
+package com.salgam.upbit.api
 
 import org.junit.jupiter.api.Test
 import org.springframework.boot.test.context.SpringBootTest
