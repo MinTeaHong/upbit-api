@@ -40,6 +40,8 @@ dependencies {
 //	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+	testImplementation("org.slf4j:slf4j-api:1.7.30")
+	testImplementation("org.slf4j:slf4j-simple:1.7.30")
 }
 
 kotlin {
