@@ -19,25 +19,18 @@ repositories {
 }
 
 dependencies {
-//	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-
-	implementation("org.java-websocket:Java-WebSocket:1.5.2")
+	//gson
 	implementation("com.google.code.gson:gson:2.8.8")
-	// https://mvnrepository.com/artifact/org.apache.directory.studio/org.apache.commons.codec
-	implementation("org.apache.directory.studio:org.apache.commons.codec:1.8")
-
-	// https://mvnrepository.com/artifact/com.auth0/java-jwt
+	//web소켓 설정
+	implementation("org.java-websocket:Java-WebSocket:1.5.2")
+	//jwt 설정
 	implementation("com.auth0:java-jwt:4.3.0")
+	//webclient 설정
 	implementation("com.squareup.okhttp3:okhttp:4.9.2")
-//	implementation("org.springframework.boot:spring-boot-starter-logging")
-//	compileOnly("org.projectlombok:lombok")
-//	annotationProcessor("org.projectlombok:lombok")
-
-
-
-
-//	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	implementation("org.springframework.boot:spring-boot-starter-webflux:2.7.4")
+	implementation("io.netty:netty-resolver-dns-native-macos:4.1.75.Final:osx-aarch_64")
+	//test 설정
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	testImplementation("org.slf4j:slf4j-api:1.7.30")

@@ -7,7 +7,6 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.salgam.upbit.api.socket.dto.UpbitTickerDto
-import com.salgam.upbit.api.socket.message.OnMessageActionInterface
 import okhttp3.*
 import okio.ByteString
 import org.slf4j.LoggerFactory
@@ -15,7 +14,9 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 
-class UpbitWebSocketListener(val action: OnMessageActionInterface) : WebSocketListener() {
+class UpbitWebSocketListener(
+    val onMessageTickerAction: (UpbitTickerDto) -> Unit
+) : WebSocketListener() {
 
     companion object {
         private val logger = LoggerFactory.getLogger(UpbitWebSocketListener::class.java)
@@ -26,11 +27,11 @@ class UpbitWebSocketListener(val action: OnMessageActionInterface) : WebSocketLi
         .create()
 
     override fun onOpen(webSocket: WebSocket, response: Response) {
-        logger.info("[UpbitWebSocketListener] Connected to WebSocket server")
+        logger.debug("[UpbitWebSocketListener] Connected to WebSocket server")
     }
 
     override fun onMessage(webSocket: WebSocket, text: String) {
-        logger.info("[UpbitWebSocketListener]  Received String message: $text")
+        logger.debug("[UpbitWebSocketListener]  Received String message: $text")
     }
 
     override fun onMessage(webSocket: WebSocket, bytes: ByteString) {
@@ -39,14 +40,13 @@ class UpbitWebSocketListener(val action: OnMessageActionInterface) : WebSocketLi
         val jsonObject = Gson().fromJson(message, JsonObject::class.java)
         if(jsonObject.get("type").asString == "ticker") {
             val upbitTickerDto = gson.fromJson(jsonObject, UpbitTickerDto::class.java)
-            action.tickerAction(upbitTickerDto)
+            onMessageTickerAction(upbitTickerDto)
         }
-
     }
 
 
     override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-        logger.info("[UpbitWebSocketListener] Connection closed: $reason")
+        logger.debug("[UpbitWebSocketListener] Connection closed: $reason")
     }
 
     override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
@@ -54,7 +54,7 @@ class UpbitWebSocketListener(val action: OnMessageActionInterface) : WebSocketLi
         logger.error("[UpbitWebSocketListener] Connection error response -- ", response )
     }
 
-    fun makeWebsocket(accessKey : String, secretKey: String) : WebSocket{
+    fun makeWebsocket(accessKey: String, secretKey: String, webSocketUl: String): WebSocket {
 
         val algorithm: Algorithm = Algorithm.HMAC256(secretKey)
         val jwtToken: String = JWT.create()
@@ -63,13 +63,13 @@ class UpbitWebSocketListener(val action: OnMessageActionInterface) : WebSocketLi
                 .withClaim("query_hash_alg", "SHA512")
                 .sign(algorithm)
 
-
         val client = OkHttpClient.Builder()
-                .readTimeout(3, TimeUnit.SECONDS)
+            .readTimeout(5, TimeUnit.SECONDS)
+            .connectTimeout(5, TimeUnit.SECONDS)
                 .build()
 
         val request = Request.Builder()
-                .url("wss://api.upbit.com/websocket/v1")
+            .url(webSocketUl)
                 .addHeader("Authorization", "Bearer $jwtToken")
                 .build()
         return  client.newWebSocket(request, this)
